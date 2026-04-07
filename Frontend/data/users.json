@@ -1,0 +1,14 @@
+[
+  {
+    "id": "1",
+    "name": "Lim",
+    "email": "test@test.com",
+    "password": "123",
+    "avatar": "",
+    "preferences": {
+      "cuisines": ["Italian", "Thai"],
+      "budget": "$$"
+    }
+  }
+
+]
