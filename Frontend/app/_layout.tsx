@@ -13,7 +13,7 @@ if (Platform.OS === 'web' && typeof window !== 'undefined' && window.Element && 
         originalReleasePointerCapture.call(this, pointerId);
       }
     } catch (e) {
-      // Safely ignore Invalid pointer id errors from RNGH web
+      // Safely ignore invalid pointer id errors from web
     }
   };
 }

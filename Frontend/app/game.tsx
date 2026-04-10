@@ -165,7 +165,6 @@ export default function GameScreen() {
             <SwipeCard
               key={slotId}
               restaurant={RESTAURANTS[currentIndex + (slotId === topSlot ? 0 : slotId === backSlot ? 1 : -1)]}
-              // CRITICAL: We pass the ACTIVE translation to the back card so it can animate its zoom
               translateX={slotId === backSlot || slotId === topSlot ? activeTrans : translations[slotId]}
               role={slotId === topSlot ? 'top' : slotId === backSlot ? 'back' : 'ghost'}
               gesture={gesture}
@@ -203,34 +202,118 @@ export default function GameScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 24, height: 88 },
-  backButton: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
-  headerTitle: { fontSize: 18, fontWeight: '700', color: '#101828', marginLeft: 'auto' },
-  content: { flex: 1, paddingHorizontal: 24 },
-  cardContainer: { width: CARD_WIDTH, height: CARD_HEIGHT },
+  container: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+    height: 88,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#101828',
+    marginLeft: 'auto',
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 24,
+  },
+  cardContainer: {
+    width: CARD_WIDTH,
+    height: CARD_HEIGHT,
+  },
   card: {
-    width: CARD_WIDTH, height: CARD_HEIGHT, borderRadius: 24, overflow: 'hidden',
-    backgroundColor: '#fff', position: 'absolute', top: 0, left: 0,
-    shadowColor: '#000', shadowOffset: { width: 0, height: 25 }, shadowOpacity: 0.25, shadowRadius: 50, elevation: 12,
+    width: CARD_WIDTH,
+    height: CARD_HEIGHT,
+    borderRadius: 24,
+    overflow: 'hidden',
+    backgroundColor: '#fff',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 25 },
+    shadowOpacity: 0.25,
+    shadowRadius: 50,
+    elevation: 12,
   },
-  cardImage: { width: '100%', height: '100%' },
-  cardOverlay: { position: 'absolute', bottom: 0, left: 0, right: 0, padding: 16, paddingBottom: 24 },
-  restaurantName: { fontSize: 32, fontWeight: '900', color: '#fff' },
-  restaurantInfo: { fontSize: 16, fontWeight: '900', color: '#fff' },
+  cardImage: {
+    width: '100%',
+    height: '100%',
+  },
+  cardOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 16,
+    paddingBottom: 24,
+  },
+  restaurantName: {
+    fontSize: 32,
+    fontWeight: '900',
+    color: '#fff',
+  },
+  restaurantInfo: {
+    fontSize: 16,
+    fontWeight: '900',
+    color: '#fff',
+  },
   emptyCard: {
-    width: CARD_WIDTH, height: CARD_HEIGHT, borderRadius: 24, backgroundColor: '#fff',
-    alignItems: 'center', justifyContent: 'center', position: 'absolute', zIndex: -1,
+    width: CARD_WIDTH,
+    height: CARD_HEIGHT,
+    borderRadius: 24,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    zIndex: -1,
   },
-  emptyText: { fontSize: 18, fontWeight: '600', color: '#364153' },
-  actionButtons: { flexDirection: 'row', justifyContent: 'center', gap: 32, marginTop: 24 },
+  emptyText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#364153',
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 32,
+    marginTop: 24,
+  },
   actionBtn: {
-    width: 64, height: 64, borderRadius: 32, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center',
-    shadowColor: '#000', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.1, shadowRadius: 15, elevation: 6,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 15,
+    elevation: 6,
   },
-  rejectBtn: { borderWidth: 1.6, borderColor: '#ff6467' },
-  infoBtn: { borderWidth: 1.6, borderColor: '#51a2ff' },
-  likeBtn: { borderWidth: 1.6, borderColor: '#05df72' },
+  rejectBtn: {
+    borderWidth: 1.6,
+    borderColor: '#ff6467',
+  },
+  infoBtn: {
+    borderWidth: 1.6,
+    borderColor: '#51a2ff',
+  },
+  likeBtn: {
+    borderWidth: 1.6,
+    borderColor: '#05df72',
+  },
   shortlistButton: {
     backgroundColor: '#4f39f6',
     borderRadius: 16,
