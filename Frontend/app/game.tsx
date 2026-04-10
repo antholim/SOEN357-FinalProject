@@ -1,14 +1,24 @@
-import { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { useState, useCallback } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, Dimensions, Platform } from 'react-native';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { GestureDetector, Gesture } from 'react-native-gesture-handler';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+  interpolate,
+  runOnJS,
+} from 'react-native-reanimated';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width - 48;
 const CARD_HEIGHT = 448;
+const SWIPE_THRESHOLD = width * 0.25;
 
 const RESTAURANTS = [
   {
@@ -51,26 +61,74 @@ export default function GameScreen() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [shortlist, setShortlist] = useState<string[]>([]);
 
+  const translateX = useSharedValue(0);
+
   const currentRestaurant = RESTAURANTS[currentIndex];
 
-  const handleReject = () => {
-    if (currentIndex < RESTAURANTS.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    }
-  };
+  const nextCard = useCallback(() => {
+    translateX.value = 0;
+    setCurrentIndex((prev) => prev + 1);
+  }, [translateX]);
 
-  const handleLike = () => {
+  const handleReject = useCallback(() => {
+    translateX.value = withTiming(-width * 1.5, { duration: 400 }, () => {
+      runOnJS(nextCard)();
+    });
+  }, [nextCard, translateX]);
+
+  const handleLike = useCallback(() => {
     if (currentRestaurant) {
-      setShortlist([...shortlist, currentRestaurant.id]);
+      setShortlist((prev) => [...prev, currentRestaurant.id]);
     }
-    if (currentIndex < RESTAURANTS.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    }
-  };
+    translateX.value = withTiming(width * 1.5, { duration: 400 }, () => {
+      runOnJS(nextCard)();
+    });
+  }, [currentRestaurant, nextCard, translateX]);
+
+  const gesture = Gesture.Pan()
+    .activeOffsetX([-5, 5])
+    .onUpdate((event) => {
+      translateX.value = event.translationX;
+    })
+    .onEnd((event) => {
+      if (Math.abs(event.translationX) > SWIPE_THRESHOLD) {
+        if (event.translationX > 0) {
+          runOnJS(handleLike)();
+        } else {
+          runOnJS(handleReject)();
+        }
+      } else {
+        translateX.value = withSpring(0);
+      }
+    })
+    .activeCursor('grabbing');
+
+  const cardStyle = useAnimatedStyle(() => {
+    const rotate = interpolate(
+      translateX.value,
+      [-width / 2, 0, width / 2],
+      [-15, 0, 15]
+    );
+
+    return {
+      transform: [
+        { translateX: translateX.value },
+        { rotate: `${rotate}deg` },
+      ],
+    };
+  });
 
   const handleInfo = () => {
     // placeholder for info modal
   };
+
+  const webStyles = Platform.OS === 'web' ? {
+    touchAction: 'none',
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
+    WebkitTouchCallout: 'none',
+    cursor: 'grab',
+  } : {};
 
   return (
     <LinearGradient colors={['#eff6ff', '#e0e7ff']} style={styles.container}>
@@ -81,22 +139,27 @@ export default function GameScreen() {
         <Text style={styles.headerTitle}>SwiperEats</Text>
       </View>
 
-      <View style={styles.content}>
+      <View style={[styles.content, Platform.OS === 'web' && { touchAction: 'none', userSelect: 'none' } as any]}>
         {currentRestaurant ? (
-          <View style={styles.card}>
-            <Image
-              source={{ uri: currentRestaurant.image }}
-              style={styles.cardImage}
-              contentFit="cover"
-            />
-            <View style={styles.cardOverlay}>
-              <Text style={styles.restaurantName}>{currentRestaurant.name}</Text>
-              <Text style={styles.restaurantInfo}>
-                {currentRestaurant.distance} - {currentRestaurant.price} -{' '}
-                {currentRestaurant.rating}
-              </Text>
-            </View>
-          </View>
+          <GestureDetector gesture={gesture}>
+            <Animated.View style={[styles.card, cardStyle, webStyles as any]}>
+              <Image
+                key={currentRestaurant.id}
+                source={{ uri: currentRestaurant.image }}
+                style={styles.cardImage}
+                contentFit="cover"
+                // @ts-ignore
+                draggable={false}
+              />
+              <View style={styles.cardOverlay}>
+                <Text style={styles.restaurantName}>{currentRestaurant.name}</Text>
+                <Text style={styles.restaurantInfo}>
+                  {currentRestaurant.distance} - {currentRestaurant.price} -{' '}
+                  {currentRestaurant.rating}
+                </Text>
+              </View>
+            </Animated.View>
+          </GestureDetector>
         ) : (
           <View style={styles.emptyCard}>
             <Text style={styles.emptyText}>No more restaurants!</Text>
