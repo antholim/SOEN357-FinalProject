@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Platform } from 'react-native';
 import 'react-native-reanimated';
+import { ShortlistProvider } from '../context/ShortlistContext';
 
 if (Platform.OS === 'web' && typeof window !== 'undefined' && window.Element && window.Element.prototype.releasePointerCapture) {
   const originalReleasePointerCapture = window.Element.prototype.releasePointerCapture;
@@ -20,14 +21,16 @@ if (Platform.OS === 'web' && typeof window !== 'undefined' && window.Element && 
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="index" />
-        <Stack.Screen name="login" />
-        {/* <Stack.Screen name="menu" />
-        <Stack.Screen name="game" />
-        <Stack.Screen name="shortlist" /> */}
-      </Stack>
-      <StatusBar style="auto" />
+      <ShortlistProvider>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="login" />
+          {/* <Stack.Screen name="menu" />
+          <Stack.Screen name="game" />
+          <Stack.Screen name="shortlist" /> */}
+        </Stack>
+        <StatusBar style="auto" />
+      </ShortlistProvider>
     </GestureHandlerRootView>
   );
 }

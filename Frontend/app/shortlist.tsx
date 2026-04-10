@@ -4,52 +4,35 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-
-const SHORTLISTED = [
-  {
-    id: '1',
-    name: 'Bella Pasta',
-    cuisine: 'Italian',
-    rating: 4.8,
-    time: '25-35 min',
-    distance: '1.2 km',
-    image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80',
-  },
-  {
-    id: '2',
-    name: 'Taco Fiesta',
-    cuisine: 'Mexican',
-    rating: 4.6,
-    time: '20-30 min',
-    distance: '0.8 km',
-    image: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&q=80',
-  },
-  {
-    id: '3',
-    name: 'Golden Wok',
-    cuisine: 'Chinese',
-    rating: 4.7,
-    time: '30-40 min',
-    distance: '1.5 km',
-    image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&q=80',
-  },
-];
+import { RESTAURANTS } from '../constants/restaurants';
+import { useShortlist } from '../context/ShortlistContext';
 
 export default function ShortlistScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { shortlist } = useShortlist();
+
+  const shortlistedRestaurants = RESTAURANTS.filter(r => shortlist.includes(r.id));
+
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace('/game');
+    }
+  };
 
   return (
     <LinearGradient colors={['#eff6ff', '#e0e7ff']} style={styles.container}>
       <View style={[styles.header, { paddingTop: insets.top }]}>
         <View style={styles.headerLeft}>
-          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+          <TouchableOpacity style={styles.backButton} onPress={handleBack}>
             <Ionicons name="arrow-back" size={24} color="#101828" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Your Shortlist</Text>
         </View>
         <View style={styles.countBadge}>
-          <Text style={styles.countText}>{SHORTLISTED.length}</Text>
+          <Text style={styles.countText}>{shortlistedRestaurants.length}</Text>
         </View>
       </View>
 
@@ -57,44 +40,57 @@ export default function ShortlistScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {SHORTLISTED.map((restaurant) => (
-          <View key={restaurant.id} style={styles.card}>
-            <View style={styles.cardImageContainer}>
-              <Image
-                source={{ uri: restaurant.image }}
-                style={styles.cardImage}
-                contentFit="cover"
-              />
-            </View>
-            <View style={styles.cardBody}>
-              <View style={styles.cardHeader}>
-                <View>
-                  <Text style={styles.cardName}>{restaurant.name}</Text>
-                  <Text style={styles.cardCuisine}>{restaurant.cuisine}</Text>
-                </View>
-                <View style={styles.ratingContainer}>
-                  <Ionicons name="star" size={16} color="#f59e0b" />
-                  <Text style={styles.ratingText}>{restaurant.rating}</Text>
-                </View>
+        {shortlistedRestaurants.length > 0 ? (
+          shortlistedRestaurants.map((restaurant) => (
+            <View key={restaurant.id} style={styles.card}>
+              <View style={styles.cardImageContainer}>
+                <Image
+                  source={{ uri: restaurant.image }}
+                  style={styles.cardImage}
+                  contentFit="cover"
+                />
               </View>
+              <View style={styles.cardBody}>
+                <View style={styles.cardHeader}>
+                  <View>
+                    <Text style={styles.cardName}>{restaurant.name}</Text>
+                    <Text style={styles.cardCuisine}>{restaurant.cuisine}</Text>
+                  </View>
+                  <View style={styles.ratingContainer}>
+                    <Ionicons name="star" size={16} color="#f59e0b" />
+                    <Text style={styles.ratingText}>{restaurant.rating}</Text>
+                  </View>
+                </View>
 
-              <View style={styles.metaRow}>
-                <View style={styles.metaItem}>
-                  <Ionicons name="time-outline" size={16} color="#6b7280" />
-                  <Text style={styles.metaText}>{restaurant.time}</Text>
+                <View style={styles.metaRow}>
+                  <View style={styles.metaItem}>
+                    <Ionicons name="time-outline" size={16} color="#6b7280" />
+                    <Text style={styles.metaText}>{restaurant.time}</Text>
+                  </View>
+                  <View style={styles.metaItem}>
+                    <Ionicons name="location-outline" size={16} color="#6b7280" />
+                    <Text style={styles.metaText}>{restaurant.distance}</Text>
+                  </View>
                 </View>
-                <View style={styles.metaItem}>
-                  <Ionicons name="location-outline" size={16} color="#6b7280" />
-                  <Text style={styles.metaText}>{restaurant.distance}</Text>
-                </View>
+
+                <TouchableOpacity style={styles.bookButton}>
+                  <Text style={styles.bookButtonText}>Book a table</Text>
+                </TouchableOpacity>
               </View>
-
-              <TouchableOpacity style={styles.bookButton}>
-                <Text style={styles.bookButtonText}>Book a table</Text>
-              </TouchableOpacity>
             </View>
+          ))
+        ) : (
+          <View style={styles.emptyContainer}>
+            <Ionicons name="heart-dislike-outline" size={64} color="#9ca3af" />
+            <Text style={styles.emptyText}>Your shortlist is empty</Text>
+            <TouchableOpacity 
+              style={styles.exploreButton}
+              onPress={() => router.push('/game')}
+            >
+              <Text style={styles.exploreButtonText}>Start Swiping</Text>
+            </TouchableOpacity>
           </View>
-        ))}
+        )}
       </ScrollView>
     </LinearGradient>
   );
@@ -156,9 +152,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 12,
     elevation: 4,
+    width: '100%',
+    alignSelf: 'center',
   },
   cardImageContainer: {
-    height: 160,
+    height: 180,
   },
   cardImage: {
     width: '100%',
@@ -217,5 +215,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#fff',
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+    paddingVertical: 100,
+  },
+  emptyText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#6b7280',
+  },
+  exploreButton: {
+    backgroundColor: '#4f39f6',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 12,
+    marginTop: 12,
+  },
+  exploreButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
   },
 });
