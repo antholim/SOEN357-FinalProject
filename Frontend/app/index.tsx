@@ -78,10 +78,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
     elevation: 4,
   },
   loginButtonText: {
@@ -97,10 +94,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 15,
+    boxShadow: '0 10px 15px rgba(0, 0, 0, 0.1)',
     elevation: 6,
   },
   signupButtonText: {

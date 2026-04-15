@@ -184,10 +184,7 @@ const styles = StyleSheet.create({
   },
   tabActive: {
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
+    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
     elevation: 2,
   },
   tabText: {
@@ -233,18 +230,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
     elevation: 4,
     marginBottom: 32,
   },
   submitButtonPurple: {
     backgroundColor: '#4f39f6',
     borderWidth: 0,
-    shadowOffset: { width: 0, height: 10 },
-    shadowRadius: 15,
+    boxShadow: '0 10px 15px rgba(0, 0, 0, 0.1)',
     elevation: 6,
   },
   submitButtonText: {

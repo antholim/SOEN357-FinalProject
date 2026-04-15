@@ -19,7 +19,7 @@ const BUDGETS = ['$', '$$', '$$$'];
 export default function MenuScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const [selectedCuisines, setSelectedCuisines] = useState<string[]>([]);
+  const [selectedCuisines, setSelectedCuisines] = useState<string[]>(CUISINES);
   const [selectedBudget, setSelectedBudget] = useState<string | null>(null);
 
   const toggleCuisine = (cuisine: string) => {
@@ -170,10 +170,7 @@ const styles = StyleSheet.create({
     height: 68,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 20 },
-    shadowOpacity: 0.1,
-    shadowRadius: 25,
+    boxShadow: '0 20px 25px rgba(0, 0, 0, 0.1)',
     elevation: 8,
   },
   startButtonText: {

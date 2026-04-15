@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Frontend",
-    "slug": "Frontend",
+    "name": "SwiperEats",
+    "slug": "swipereats",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "frontend",
+    "scheme": "swipereats",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {

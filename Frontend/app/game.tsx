@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 24,
-    height: 88,
+    paddingBottom: 8,
   },
   backButton: {
     width: 40,
@@ -226,6 +226,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 24,
+    paddingTop: 16,
   },
   cardContainer: {
     width: CARD_WIDTH,
@@ -240,10 +241,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 25 },
-    shadowOpacity: 0.25,
-    shadowRadius: 50,
+    boxShadow: '0 25px 50px rgba(0, 0, 0, 0.25)',
     elevation: 12,
   },
   cardImage: {
@@ -296,10 +294,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 15,
+    boxShadow: '0 10px 15px rgba(0, 0, 0, 0.1)',
     elevation: 6,
   },
   rejectBtn: {
@@ -321,10 +316,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 15,
+    boxShadow: '0 10px 15px rgba(0, 0, 0, 0.1)',
     elevation: 6,
   },
   shortlistButtonText: {
