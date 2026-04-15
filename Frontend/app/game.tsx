@@ -274,7 +274,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
-    zIndex: -1,
+    zIndex: 0,
+    elevation: 4,
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
   },
   emptyText: {
     fontSize: 18,
