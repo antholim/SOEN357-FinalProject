@@ -1,5 +1,5 @@
 import { useState, useCallback, memo, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Dimensions, Platform } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Dimensions, Platform, Modal } from 'react-native';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
@@ -88,6 +88,7 @@ export default function GameScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [infoVisible, setInfoVisible] = useState(false);
   const { shortlist, addToShortlist } = useShortlist();
 
   const trans0 = useSharedValue(0);
@@ -100,7 +101,7 @@ export default function GameScreen() {
   const activeTrans = translations[topSlot];
 
   const handleInfo = () => {
-    // placeholder for info modal
+    if (RESTAURANTS[currentIndex]) setInfoVisible(true);
   };
 
   const finalizeSwipe = useCallback((isLike: boolean) => {
@@ -197,6 +198,26 @@ export default function GameScreen() {
           </Text>
         </TouchableOpacity>
       </View>
+
+      <Modal visible={infoVisible} transparent animationType="fade" onRequestClose={() => setInfoVisible(false)}>
+        <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setInfoVisible(false)}>
+          <View style={styles.modalCard}>
+            {RESTAURANTS[currentIndex] && (
+              <>
+                <Text style={styles.modalName}>{RESTAURANTS[currentIndex].name}</Text>
+                <Text style={styles.modalDescription}>{RESTAURANTS[currentIndex].description}</Text>
+                <View style={styles.modalRow}>
+                  <Ionicons name="location-outline" size={16} color="#6b7280" />
+                  <Text style={styles.modalMeta}>{RESTAURANTS[currentIndex].distance}</Text>
+                  <Ionicons name="time-outline" size={16} color="#6b7280" style={{ marginLeft: 12 }} />
+                  <Text style={styles.modalMeta}>{RESTAURANTS[currentIndex].time}</Text>
+                  <Text style={[styles.modalMeta, { marginLeft: 12 }]}>{RESTAURANTS[currentIndex].price}</Text>
+                </View>
+              </>
+            )}
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </LinearGradient>
   );
 }
@@ -325,5 +346,39 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: '#fff',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 32,
+  },
+  modalCard: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 24,
+    width: '100%',
+  },
+  modalName: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: '#101828',
+    marginBottom: 8,
+  },
+  modalDescription: {
+    fontSize: 15,
+    color: '#374151',
+    lineHeight: 22,
+    marginBottom: 16,
+  },
+  modalRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  modalMeta: {
+    fontSize: 14,
+    color: '#6b7280',
+    marginLeft: 4,
   },
 });
